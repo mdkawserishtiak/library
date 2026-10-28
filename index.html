@@ -14,7 +14,97 @@
     <table
       class="mx-auto text-center **:py-4 **:px-2 sm:w-xl md:w-2xl lg:w-4xl xl:w-6xl mb-28"
       id="table"
-    ></table>
+    >
+      <thead class="bg-black text-white uppercase tracking-wider">
+        <tr>
+          <th>Title</th>
+          <th>Author</th>
+          <th>Pages</th>
+          <th>Read</th>
+        </tr>
+      </thead>
+
+      <tbody id="table-body">
+        <tr>
+          <td colspan="4" class="p-0!">
+            <button
+              class="w-full flex items-center justify-center p-0! bg-black border-2 text-white font-bold tracking-widest uppercase cursor-pointer hover:bg-white hover:text-black transition-all"
+              popovertarget="add-book-dialog"
+            >
+              <img src="./icons/add-book.png" width="50" height="50" />
+              Add Book
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <dialog
+      class="w-full h-full px-6 py-6 sm:px-10 lg:px-20 md:px-32 xl:px-40"
+      id="add-book-dialog"
+      popover
+    >
+      <form class="flex flex-col gap-5" method="dialog">
+        <div class="flex items-center gap-4">
+          <label class="uppercase" for="title">Title</label>
+
+          <input
+            class="w-full outline-0 border py-0.5 px-1"
+            type="text"
+            name="title"
+            id="title"
+            required
+          />
+        </div>
+
+        <div class="flex items-center gap-4">
+          <label class="uppercase" for="author">Author</label>
+
+          <input
+            class="w-full outline-0 border py-0.5 px-1"
+            type="text"
+            name="author"
+            id="author"
+            required
+          />
+        </div>
+
+        <div class="flex items-center gap-4">
+          <label class="uppercase" for="pages">Pages</label>
+
+          <input
+            class="w-full outline-0 border py-0.5 px-1"
+            type="number"
+            min="1"
+            name="pages"
+            id="pages"
+            required
+          />
+        </div>
+
+        <div class="flex items-center gap-4">
+          <label class="uppercase" for="read">Read</label>
+
+          <input type="checkbox" name="read" id="read" />
+        </div>
+
+        <button
+          class="w-full flex items-center justify-center gap-2 py-4 bg-black border-2 text-white font-bold tracking-widest uppercase cursor-pointer hover:bg-white hover:text-black transition-all"
+          id="add-book-button"
+        >
+          <img src="./icons/add-book.png" width="30" height="30" />
+          Add Book
+        </button>
+      </form>
+
+      <button
+        class="w-full mt-2 py-4 bg-black border-2 text-white font-bold tracking-widest uppercase cursor-pointer hover:bg-white hover:text-black transition-all"
+        popovertarget="add-book-dialog"
+        popovertargetaction="hide"
+      >
+        Close
+      </button>
+    </dialog>
 
     <script src="script.js"></script>
   </body>

@@ -1,3 +1,15 @@
+// Test Data
+// To Kill a Mockingbird, Harper Lee, 281
+// The Great Gatsby, F. Scott Fitzgerald, 180
+// 1984, George Orwell, 328
+// Pride and Prejudice, Jane Austen, 279
+// The Catcher in the Rye, J.D. Salinger, 234
+// The Hobbit, J.R.R. Tolkien, 310
+// Brave New World, Aldous Huxley, 268
+// Fahrenheit 451, Ray Bradbury, 249
+// Crime and Punishment, Fyodor Dostoevsky, 671
+// The Alchemist, Paulo Coelho, 208
+
 const library = [];
 
 function Book(id, title, author, pages, isRead) {
@@ -20,28 +32,8 @@ const addBookToLibrary = (title, author, pages, isRead) => {
   library.push(book);
 };
 
-addBookToLibrary("To Kill a Mockingbird", "Harper Lee", "281", true);
-addBookToLibrary("1984", "George Orwell", "328", true);
-addBookToLibrary("The Great Gatsby", "F. Scott Fitzgerald", "180", false);
-addBookToLibrary("Pride and Prejudice", "Jane Austen", "279", true);
-addBookToLibrary("The Catcher in the Rye", "J.D. Salinger", "234", false);
-addBookToLibrary("The Hobbit", "J.R.R. Tolkien", "310", true);
-addBookToLibrary("Brave New World", "Aldous Huxley", "268", false);
-addBookToLibrary("Fahrenheit 451", "Ray Bradbury", "249", true);
-addBookToLibrary("Crime and Punishment", "Fyodor Dostoevsky", "671", false);
-addBookToLibrary("The Alchemist", "Paulo Coelho", "208", true);
-
 const displayBooks = (books) => {
-  const tableHead = `<thead class="bg-black text-white uppercase tracking-wider">
-        <tr>
-          <th>Name</th>
-          <th>Author</th>
-          <th>Pages</th>
-          <th>Read</th>
-        </tr>
-      </thead>`;
-
-  const tableBodyRows = books
+  const bookRows = books
     .map((book) => {
       return `
         <tr class="odd:bg-gray-200/70">
@@ -54,8 +46,53 @@ const displayBooks = (books) => {
     })
     .join("");
 
-  document.querySelector("#table").innerHTML =
-    tableHead + "<tbody>" + tableBodyRows + "</tbody>";
+  const addBookRow = `
+        <tr>
+            <td colspan="4" class="p-0!">
+                <button
+                class="w-full flex items-center justify-center p-0! bg-black border-2 text-white font-bold tracking-widest uppercase cursor-pointer hover:bg-white hover:text-black transition-all"
+                popovertarget="add-book-dialog"
+                >
+                <img src="./icons/add-book.png" width="50" height="50" />
+                Add Book
+                </button>
+            </td>
+        </tr>
+    `;
+
+  document.querySelector("#table-body").innerHTML = bookRows + addBookRow;
 };
 
-displayBooks(library);
+const addBookButton = document.querySelector("#add-book-button");
+const addBookDialog = document.querySelector("#add-book-dialog");
+
+addBookButton.addEventListener("click", () => {
+  const inputTitle = document.querySelector("#title");
+  const inputAuthor = document.querySelector("#author");
+  const inputPages = document.querySelector("#pages");
+  const inputIsRead = document.querySelector("#read");
+
+  if (
+    inputTitle.value === "" ||
+    inputAuthor.value === "" ||
+    inputPages.value === ""
+  ) {
+    return;
+  }
+
+  addBookToLibrary(
+    inputTitle.value,
+    inputAuthor.value,
+    inputPages.value,
+    inputIsRead.checked,
+  );
+
+  displayBooks(library);
+
+  inputTitle.value = "";
+  inputAuthor.value = "";
+  inputPages.value = "";
+  inputIsRead.checked = false;
+
+  addBookDialog.hidePopover();
+});
