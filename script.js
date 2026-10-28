@@ -41,6 +41,13 @@ const displayBooks = (books) => {
           <td>${book.author}</td>
           <td>${book.pages}</td>
           <td>${book.isRead ? "Yes" : "No"}</td>
+          <td>
+            <button
+                class="p-0! cursor-pointer transition-all hover:border-b-4"
+                >
+                <img src="./icons/remove-book.png" width="50" height="50" />
+              </button>
+          </td>
         </tr>
       `;
     })
@@ -48,7 +55,7 @@ const displayBooks = (books) => {
 
   const addBookRow = `
         <tr>
-            <td colspan="4" class="p-0!">
+            <td colspan="5" class="p-0!">
                 <button
                 class="w-full flex items-center justify-center p-0! bg-black border-2 text-white font-bold tracking-widest uppercase cursor-pointer hover:bg-white hover:text-black transition-all"
                 popovertarget="add-book-dialog"
@@ -62,6 +69,19 @@ const displayBooks = (books) => {
 
   document.querySelector("#table-body").innerHTML = bookRows + addBookRow;
 };
+
+addBookToLibrary("To Kill a Mockingbird", "Harper Lee", "281", true);
+addBookToLibrary("1984", "George Orwell", "328", true);
+addBookToLibrary("The Great Gatsby", "F. Scott Fitzgerald", "180", false);
+addBookToLibrary("Pride and Prejudice", "Jane Austen", "279", true);
+addBookToLibrary("The Catcher in the Rye", "J.D. Salinger", "234", false);
+addBookToLibrary("The Hobbit", "J.R.R. Tolkien", "310", true);
+addBookToLibrary("Brave New World", "Aldous Huxley", "268", false);
+addBookToLibrary("Fahrenheit 451", "Ray Bradbury", "249", true);
+addBookToLibrary("Crime and Punishment", "Fyodor Dostoevsky", "671", false);
+addBookToLibrary("The Alchemist", "Paulo Coelho", "208", true);
+
+displayBooks(library);
 
 const addBookButton = document.querySelector("#add-book-button");
 const addBookDialog = document.querySelector("#add-book-dialog");

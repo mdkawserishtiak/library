@@ -12,8 +12,7 @@
     </h1>
 
     <table
-      class="mx-auto text-center **:py-4 **:px-2 sm:w-xl md:w-2xl lg:w-4xl xl:w-6xl mb-28"
-      id="table"
+      class="mx-auto text-center **:p-2 sm:w-xl md:w-2xl lg:w-4xl xl:w-6xl mb-20"
     >
       <thead class="bg-black text-white uppercase tracking-wider">
         <tr>
@@ -21,12 +20,13 @@
           <th>Author</th>
           <th>Pages</th>
           <th>Read</th>
+          <th>Remove</th>
         </tr>
       </thead>
 
       <tbody id="table-body">
         <tr>
-          <td colspan="4" class="p-0!">
+          <td colspan="5" class="p-0!">
             <button
               class="w-full flex items-center justify-center p-0! bg-black border-2 text-white font-bold tracking-widest uppercase cursor-pointer hover:bg-white hover:text-black transition-all"
               popovertarget="add-book-dialog"
@@ -89,7 +89,7 @@
         </div>
 
         <button
-          class="w-full flex items-center justify-center gap-2 py-4 bg-black border-2 text-white font-bold tracking-widest uppercase cursor-pointer hover:bg-white hover:text-black transition-all"
+          class="w-full flex items-center justify-center gap-2 py-2 bg-black border-2 text-white font-bold tracking-widest uppercase cursor-pointer hover:bg-white hover:text-black transition-all"
           id="add-book-button"
         >
           <img src="./icons/add-book.png" width="30" height="30" />
@@ -98,7 +98,7 @@
       </form>
 
       <button
-        class="w-full mt-2 py-4 bg-black border-2 text-white font-bold tracking-widest uppercase cursor-pointer hover:bg-white hover:text-black transition-all"
+        class="w-full mt-2 py-2 bg-black border-2 text-white font-bold tracking-widest uppercase cursor-pointer hover:bg-white hover:text-black transition-all"
         popovertarget="add-book-dialog"
         popovertargetaction="hide"
       >
