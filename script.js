@@ -32,6 +32,8 @@ const addBookToLibrary = (title, author, pages, isRead) => {
   library.push(book);
 };
 
+const tableBody = document.querySelector("#table-body");
+
 const displayBooks = (books) => {
   const bookRows = books
     .map((book) => {
@@ -43,7 +45,8 @@ const displayBooks = (books) => {
           <td>${book.isRead ? "Yes" : "No"}</td>
           <td>
             <button
-                class="p-0! cursor-pointer transition-all hover:border-b-4"
+                class="p-0! cursor-pointer transition-all hover:border-b-4 remove-book"
+                data-id="${book.id}"
                 >
                 <img src="./icons/remove-book.png" width="50" height="50" />
               </button>
@@ -67,26 +70,28 @@ const displayBooks = (books) => {
         </tr>
     `;
 
-  document.querySelector("#table-body").innerHTML = bookRows + addBookRow;
+  tableBody.innerHTML = bookRows + addBookRow;
 };
 
-addBookToLibrary("To Kill a Mockingbird", "Harper Lee", "281", true);
-addBookToLibrary("1984", "George Orwell", "328", true);
-addBookToLibrary("The Great Gatsby", "F. Scott Fitzgerald", "180", false);
-addBookToLibrary("Pride and Prejudice", "Jane Austen", "279", true);
-addBookToLibrary("The Catcher in the Rye", "J.D. Salinger", "234", false);
-addBookToLibrary("The Hobbit", "J.R.R. Tolkien", "310", true);
-addBookToLibrary("Brave New World", "Aldous Huxley", "268", false);
-addBookToLibrary("Fahrenheit 451", "Ray Bradbury", "249", true);
-addBookToLibrary("Crime and Punishment", "Fyodor Dostoevsky", "671", false);
-addBookToLibrary("The Alchemist", "Paulo Coelho", "208", true);
+// addBookToLibrary("To Kill a Mockingbird", "Harper Lee", "281", true);
+// addBookToLibrary("1984", "George Orwell", "328", true);
+// addBookToLibrary("The Great Gatsby", "F. Scott Fitzgerald", "180", false);
+// addBookToLibrary("Pride and Prejudice", "Jane Austen", "279", true);
+// addBookToLibrary("The Catcher in the Rye", "J.D. Salinger", "234", false);
+// addBookToLibrary("The Hobbit", "J.R.R. Tolkien", "310", true);
+// addBookToLibrary("Brave New World", "Aldous Huxley", "268", false);
+// addBookToLibrary("Fahrenheit 451", "Ray Bradbury", "249", true);
+// addBookToLibrary("Crime and Punishment", "Fyodor Dostoevsky", "671", false);
+// addBookToLibrary("The Alchemist", "Paulo Coelho", "208", true);
 
-displayBooks(library);
+// displayBooks(library);
 
 const addBookButton = document.querySelector("#add-book-button");
 const addBookDialog = document.querySelector("#add-book-dialog");
 
-addBookButton.addEventListener("click", () => {
+addBookButton.addEventListener("click", (event) => {
+  event.preventDefault();
+
   const inputTitle = document.querySelector("#title");
   const inputAuthor = document.querySelector("#author");
   const inputPages = document.querySelector("#pages");
@@ -115,4 +120,18 @@ addBookButton.addEventListener("click", () => {
   inputIsRead.checked = false;
 
   addBookDialog.hidePopover();
+});
+
+tableBody.addEventListener("click", (event) => {
+  const removeBookButton = event.target.closest(".remove-book");
+  if (!removeBookButton) return;
+
+  const id = removeBookButton.dataset.id;
+
+  library.splice(
+    library.findIndex((book) => book.id === id),
+    1,
+  );
+
+  displayBooks(library);
 });
