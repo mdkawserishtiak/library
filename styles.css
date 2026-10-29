@@ -191,23 +191,14 @@
   .flex {
     display: flex;
   }
-  .table {
-    display: table;
-  }
   .h-full {
     height: 100%;
   }
   .w-full {
     width: 100%;
   }
-  .border-collapse {
-    border-collapse: collapse;
-  }
   .cursor-pointer {
     cursor: pointer;
-  }
-  .resize {
-    resize: both;
   }
   .flex-col {
     flex-direction: column;
@@ -217,12 +208,6 @@
   }
   .justify-center {
     justify-content: center;
-  }
-  .gap-1 {
-    gap: var(--spacing);
-  }
-  .gap-1\.5 {
-    gap: calc(var(--spacing) * 1.5);
   }
   .gap-2 {
     gap: calc(var(--spacing) * 2);
@@ -244,14 +229,8 @@
   .bg-black {
     background-color: var(--color-black);
   }
-  .p-0 {
-    padding: 0px;
-  }
   .p-0\! {
     padding: 0px !important;
-  }
-  .p-1 {
-    padding: var(--spacing);
   }
   .p-1\! {
     padding: var(--spacing) !important;
@@ -262,9 +241,6 @@
   .px-6 {
     padding-inline: calc(var(--spacing) * 6);
   }
-  .py-0 {
-    padding-block: 0px;
-  }
   .py-0\.5 {
     padding-block: calc(var(--spacing) * 0.5);
   }
@@ -273,12 +249,6 @@
   }
   .py-6 {
     padding-block: calc(var(--spacing) * 6);
-  }
-  .pb-1 {
-    padding-bottom: var(--spacing);
-  }
-  .pb-1\! {
-    padding-bottom: var(--spacing) !important;
   }
   .text-center {
     text-align: center;
@@ -309,13 +279,6 @@
   .uppercase {
     text-transform: uppercase;
   }
-  .underline {
-    text-decoration-line: underline;
-  }
-  .outline {
-    outline-style: var(--tw-outline-style);
-    outline-width: 1px;
-  }
   .outline-0 {
     outline-style: var(--tw-outline-style);
     outline-width: 0px;
@@ -335,17 +298,9 @@
     }
   }
   @media (hover: hover) {
-    .hover\:border-b-2:hover {
-      border-bottom-style: var(--tw-border-style);
-      border-bottom-width: 2px;
-    }
     .hover\:border-b-3:hover {
       border-bottom-style: var(--tw-border-style);
       border-bottom-width: 3px;
-    }
-    .hover\:border-b-4:hover {
-      border-bottom-style: var(--tw-border-style);
-      border-bottom-width: 4px;
     }
     .hover\:bg-white:hover {
       background-color: var(--color-white);

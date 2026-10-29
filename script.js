@@ -1,4 +1,10 @@
-const library = [];
+const library = localStorage.getItem("library")
+  ? JSON.parse(localStorage.getItem("library"))
+  : [];
+
+const tableBody = document.querySelector("#table-body");
+const addBookButton = document.querySelector("#add-book-button");
+const addBookDialog = document.querySelector("#add-book-dialog");
 
 function Book(id, title, author, pages, isRead) {
   if (!new.target) {
@@ -12,22 +18,16 @@ function Book(id, title, author, pages, isRead) {
   this.isRead = isRead;
 }
 
-Book.prototype.changeReadStatus = function () {
-  this.isRead = !this.isRead;
-};
-
 const addBookToLibrary = (title, author, pages, isRead) => {
   const id = crypto.randomUUID();
-
   const book = new Book(id, title, author, pages, isRead);
 
   library.push(book);
+  localStorage.setItem("library", JSON.stringify(library));
 };
 
-const tableBody = document.querySelector("#table-body");
-
-const displayBooks = (books) => {
-  const bookRows = books
+const displayBooks = () => {
+  const bookRows = library
     .map((book) => {
       return `
         <tr class="odd:bg-gray-200/70">
@@ -74,8 +74,7 @@ const displayBooks = (books) => {
   tableBody.innerHTML = bookRows + addBookRow;
 };
 
-const addBookButton = document.querySelector("#add-book-button");
-const addBookDialog = document.querySelector("#add-book-dialog");
+displayBooks();
 
 addBookButton.addEventListener("click", (event) => {
   event.preventDefault();
@@ -100,7 +99,7 @@ addBookButton.addEventListener("click", (event) => {
     inputIsRead.checked,
   );
 
-  displayBooks(library);
+  displayBooks();
 
   inputTitle.value = "";
   inputAuthor.value = "";
@@ -125,8 +124,9 @@ tableBody.addEventListener("click", (event) => {
   if (removeBookButton) {
     library.splice(indexOfTheObject, 1);
   } else if (changeReadStatusButton) {
-    library[indexOfTheObject].changeReadStatus();
+    library[indexOfTheObject].isRead = !library[indexOfTheObject].isRead;
   }
 
-  displayBooks(library);
+  localStorage.setItem("library", JSON.stringify(library));
+  displayBooks();
 });
