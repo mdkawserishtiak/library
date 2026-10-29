@@ -1,15 +1,3 @@
-// Test Data
-// To Kill a Mockingbird, Harper Lee, 281
-// The Great Gatsby, F. Scott Fitzgerald, 180
-// 1984, George Orwell, 328
-// Pride and Prejudice, Jane Austen, 279
-// The Catcher in the Rye, J.D. Salinger, 234
-// The Hobbit, J.R.R. Tolkien, 310
-// Brave New World, Aldous Huxley, 268
-// Fahrenheit 451, Ray Bradbury, 249
-// Crime and Punishment, Fyodor Dostoevsky, 671
-// The Alchemist, Paulo Coelho, 208
-
 const library = [];
 
 function Book(id, title, author, pages, isRead) {
@@ -23,6 +11,10 @@ function Book(id, title, author, pages, isRead) {
   this.pages = pages;
   this.isRead = isRead;
 }
+
+Book.prototype.changeReadStatus = function () {
+  this.isRead = !this.isRead;
+};
 
 const addBookToLibrary = (title, author, pages, isRead) => {
   const id = crypto.randomUUID();
@@ -42,13 +34,22 @@ const displayBooks = (books) => {
           <td>${book.title}</td>
           <td>${book.author}</td>
           <td>${book.pages}</td>
-          <td>${book.isRead ? "Yes" : "No"}</td>
           <td>
+            <div class="p-0!">${book.isRead ? "Yes" : "No"}</div>
+
             <button
-                class="p-0! cursor-pointer transition-all hover:border-b-4 remove-book"
+                class="p-0! cursor-pointer transition-all hover:border-b-3 change-read-status"
                 data-id="${book.id}"
                 >
-                <img src="./icons/remove-book.png" width="50" height="50" />
+                <img class="p-1!" src="./icons/exchange.png" width="26" height="26" />
+            </button>
+          </td>
+          <td>
+            <button
+                class="p-0! cursor-pointer transition-all hover:border-b-3 remove-book"
+                data-id="${book.id}"
+                >
+                <img class="p-1!" src="./icons/remove-book.png" width="40" height="40" />
               </button>
           </td>
         </tr>
@@ -72,19 +73,6 @@ const displayBooks = (books) => {
 
   tableBody.innerHTML = bookRows + addBookRow;
 };
-
-// addBookToLibrary("To Kill a Mockingbird", "Harper Lee", "281", true);
-// addBookToLibrary("1984", "George Orwell", "328", true);
-// addBookToLibrary("The Great Gatsby", "F. Scott Fitzgerald", "180", false);
-// addBookToLibrary("Pride and Prejudice", "Jane Austen", "279", true);
-// addBookToLibrary("The Catcher in the Rye", "J.D. Salinger", "234", false);
-// addBookToLibrary("The Hobbit", "J.R.R. Tolkien", "310", true);
-// addBookToLibrary("Brave New World", "Aldous Huxley", "268", false);
-// addBookToLibrary("Fahrenheit 451", "Ray Bradbury", "249", true);
-// addBookToLibrary("Crime and Punishment", "Fyodor Dostoevsky", "671", false);
-// addBookToLibrary("The Alchemist", "Paulo Coelho", "208", true);
-
-// displayBooks(library);
 
 const addBookButton = document.querySelector("#add-book-button");
 const addBookDialog = document.querySelector("#add-book-dialog");
@@ -124,14 +112,21 @@ addBookButton.addEventListener("click", (event) => {
 
 tableBody.addEventListener("click", (event) => {
   const removeBookButton = event.target.closest(".remove-book");
-  if (!removeBookButton) return;
+  const changeReadStatusButton = event.target.closest(".change-read-status");
 
-  const id = removeBookButton.dataset.id;
+  if (!(removeBookButton || changeReadStatusButton)) return;
 
-  library.splice(
-    library.findIndex((book) => book.id === id),
-    1,
-  );
+  const id = removeBookButton
+    ? removeBookButton.dataset.id
+    : changeReadStatusButton.dataset.id;
+
+  const indexOfTheObject = library.findIndex((book) => book.id === id);
+
+  if (removeBookButton) {
+    library.splice(indexOfTheObject, 1);
+  } else if (changeReadStatusButton) {
+    library[indexOfTheObject].changeReadStatus();
+  }
 
   displayBooks(library);
 });
