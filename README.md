@@ -1,6 +1,6 @@
 # Library
 
-A lightweight personal library tracker built with plain HTML, CSS, and JavaScript. It lets you keep track of books you've read, books you're currently reading, and books you want to add to your collection.
+A lightweight personal library tracker built with plain HTML, TailwindCSS, and JavaScript. It lets you keep track of books you've read, books you're currently reading, and books you want to add to your collection.
 
 ## Features
 
@@ -13,7 +13,7 @@ A lightweight personal library tracker built with plain HTML, CSS, and JavaScrip
 ## Tech Stack
 
 - HTML
-- CSS
+- TailwindCSS
 - JavaScript
 
 ## Project Structure
@@ -28,23 +28,6 @@ library/
 └── icons/
 ```
 
-## How to Run
-
-Because this is a static web app, you can run it in either of these ways:
-
-1. Open `index.html` directly in your browser, or
-2. Serve it locally with a simple static server:
-
-```bash
-python -m http.server 8000
-```
-
-Then visit:
-
-```text
-http://localhost:8000
-```
-
 ## How It Works
 
 - The app stores all library entries in `localStorage`.
@@ -54,19 +37,11 @@ http://localhost:8000
   - author
   - pages
   - read status
-- The page dynamically renders the current list and handles add/remove/update actions in the browser.
+- The page dynamically renders the current list and handles add/remove actions in the browser.
 
 ## Example Usage
 
 1. Click the "Add Book" button.
 2. Enter the book's title, author, total pages, and whether it has been read.
 3. Save it to your library.
-4. Toggle the read status or remove any title whenever needed.
-
-## License
-
-This project is open for personal use and modification.
-
-## Author
-
-Built as a small library management app for organizing personal reading lists.
+4. Toggle the read status or remove any book whenever needed.
