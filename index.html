@@ -27,19 +27,19 @@
       Library
     </h1>
 
-    <div class="px-6 mt-10 sm:hidden">
+    <div class="px-6 my-10 sm:hidden">
       <div id="card-container"></div>
 
       <button
         class="w-full flex items-center justify-center gap-2 py-2 bg-black border-2 text-white font-bold tracking-widest uppercase cursor-pointer hover:bg-white hover:text-black transition-all"
-        popovertarget="add-book-dialog"
+        popovertarget="book-dialog"
       >
         <img src="./icons/add-book.png" width="33" height="33" />
         Add Book
       </button>
     </div>
 
-    <div class="hidden sm:table mx-auto mt-20 text-center mb-20">
+    <div class="hidden sm:table my-20 mx-auto text-center">
       <table class="**:p-2 sm:w-xl md:w-2xl lg:w-4xl xl:w-6xl">
         <thead class="bg-black text-white uppercase">
           <tr>
@@ -57,7 +57,7 @@
 
       <button
         class="w-full flex items-center justify-center gap-2 py-2 bg-black border-2 text-white font-bold tracking-widest uppercase cursor-pointer hover:bg-white hover:text-black transition-all"
-        popovertarget="add-book-dialog"
+        popovertarget="book-dialog"
       >
         <img src="./icons/add-book.png" width="37" height="37" />
         Add Book
@@ -66,7 +66,7 @@
 
     <dialog
       class="w-full h-full px-6 py-6 sm:px-10 lg:px-20 md:px-32 xl:px-40"
-      id="add-book-dialog"
+      id="book-dialog"
       popover
     >
       <form class="flex flex-col gap-5" method="dialog">
@@ -102,11 +102,11 @@
             id="category"
             name="category"
           >
-            <option value="uncategorized" selected>Uncategorized</option>
-            <option value="fiction">Fiction</option>
-            <option value="non-fiction">Non fiction</option>
-            <option value="poetry">Poetry</option>
-            <option value="drama">Drama</option>
+            <option value="Uncategorized" selected>Uncategorized</option>
+            <option value="Fiction">Fiction</option>
+            <option value="Non fiction">Non fiction</option>
+            <option value="Poetry">Poetry</option>
+            <option value="Drama">Drama</option>
           </select>
         </div>
 
@@ -136,11 +136,20 @@
           <img src="./icons/add-book.png" width="30" height="30" />
           Add Book
         </button>
+
+        <button
+          class="w-full hidden items-center justify-center gap-2 py-2 bg-black border-2 text-white font-bold tracking-widest uppercase cursor-pointer hover:bg-white hover:text-black transition-all"
+          id="edit-book-button"
+        >
+          <img src="./icons/edit-book-special.png" width="30" height="30" />
+          Edit Book
+        </button>
       </form>
 
       <button
         class="w-full mt-2 py-2 bg-black border-2 text-white font-bold tracking-widest uppercase cursor-pointer hover:bg-white hover:text-black transition-all"
-        popovertarget="add-book-dialog"
+        id="close"
+        popovertarget="book-dialog"
         popovertargetaction="hide"
       >
         Close
