@@ -7,10 +7,11 @@
     <link rel="stylesheet" href="styles.css" />
 
     <!-- Google tag (gtag.js) -->
-    <!-- <script
+    <script
       async
       src="https://www.googletagmanager.com/gtag/js?id=G-EX4T8CBSMB"
     ></script>
+
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag() {
@@ -19,29 +20,49 @@
       gtag("js", new Date());
 
       gtag("config", "G-EX4T8CBSMB");
-    </script> -->
+    </script>
   </head>
   <body>
-    <h1 class="text-5xl font-black text-center mt-10 mb-20 tracking-tighter">
+    <h1 class="text-5xl font-black text-center mt-10 tracking-tighter">
       Library
     </h1>
 
-    <table
-      class="mx-auto text-center **:p-2 sm:w-xl md:w-2xl lg:w-4xl xl:w-6xl mb-20"
-    >
-      <thead class="bg-black text-white uppercase">
-        <tr>
-          <th>Title</th>
-          <th>Author</th>
-          <th>Category</th>
-          <th>Pages</th>
-          <th>Read</th>
-          <th>Remove</th>
-        </tr>
-      </thead>
+    <div class="px-6 mt-10 sm:hidden">
+      <div id="card-container"></div>
 
-      <tbody id="table-body"></tbody>
-    </table>
+      <button
+        class="w-full flex items-center justify-center gap-2 py-2 bg-black border-2 text-white font-bold tracking-widest uppercase cursor-pointer hover:bg-white hover:text-black transition-all"
+        popovertarget="add-book-dialog"
+      >
+        <img src="./icons/add-book.png" width="33" height="33" />
+        Add Book
+      </button>
+    </div>
+
+    <div class="hidden sm:table mx-auto mt-20 text-center mb-20">
+      <table class="**:p-2 sm:w-xl md:w-2xl lg:w-4xl xl:w-6xl">
+        <thead class="bg-black text-white uppercase">
+          <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Category</th>
+            <th>Pages</th>
+            <th>Read</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody id="table-body"></tbody>
+      </table>
+
+      <button
+        class="w-full flex items-center justify-center gap-2 py-2 bg-black border-2 text-white font-bold tracking-widest uppercase cursor-pointer hover:bg-white hover:text-black transition-all"
+        popovertarget="add-book-dialog"
+      >
+        <img src="./icons/add-book.png" width="37" height="37" />
+        Add Book
+      </button>
+    </div>
 
     <dialog
       class="w-full h-full px-6 py-6 sm:px-10 lg:px-20 md:px-32 xl:px-40"

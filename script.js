@@ -3,7 +3,10 @@ const library = localStorage.getItem("library")
   : [];
 
 const tableBody = document.querySelector("#table-body");
+const cardContainer = document.querySelector("#card-container");
+
 const addBookButton = document.querySelector("#add-book-button");
+
 const addBookDialog = document.querySelector("#add-book-dialog");
 
 function Book(id, title, author, category, pages, isRead) {
@@ -28,10 +31,65 @@ const addBookToLibrary = (title, author, category, pages, isRead) => {
 };
 
 const displayBooks = () => {
-  const bookRows = library
-    .map((book) => {
-      return `
-        <tr class="odd:bg-gray-200/70">
+  let cards = "";
+  let rows = "";
+
+  library.forEach((book) => {
+    cards += `<div class="mt-10 p-5 border border-gray-100 rounded shadow-xl">
+        <h2 class="flex justify-between border-b-2 border-gray-300 pb-3">
+          <span class="font-black uppercase">Title</span>
+          <span>${book.title}</span>
+        </h2>
+
+        <p class="flex justify-between border-b-2 border-gray-300 py-3">
+          <span class="font-black uppercase">Author</span>
+          <span>${book.author}</span>
+        </p>
+
+        <p class="flex justify-between border-b-2 border-gray-300 py-3">
+          <span class="font-black uppercase">Category</span>
+          <span>${book.category}</span>
+        </p>
+
+        <p class="flex justify-between border-b-2 border-gray-300 py-3">
+          <span class="font-black uppercase">Pages</span>
+          <span>${book.pages}</span>
+        </p>
+
+        <p class="flex justify-between border-b-2 border-gray-300 py-3">
+          <span class="font-black uppercase">Read</span>
+          <span class="flex items-center gap-2">
+            ${book.isRead ? "Yes" : "No"}
+            <button
+              class="border-b-3 border-white cursor-pointer transition-all hover:border-black change-read-status"
+              data-id="${book.id}"
+            >
+              <img
+                class="p-1"
+                src="./icons/exchange.png"
+                width="27"
+                height="27"
+              /></button
+          ></span>
+        </p>
+
+        <p class="flex justify-between pt-3">
+          <span class="font-black uppercase">Actions</span>
+          <button
+            class="border-b-3 border-white cursor-pointer transition-all hover:border-black remove-book"
+            data-id="${book.id}"
+          >
+            <img
+              class="p-1"
+              src="./icons/remove-book.png"
+              width="40"
+              height="40"
+            />
+          </button>
+        </p>
+      </div>`;
+
+    rows += `<tr class="odd:bg-gray-200/70">
           <td>${book.title}</td>
           <td>${book.author}</td>
           <td>${book.category}</td>
@@ -54,26 +112,34 @@ const displayBooks = () => {
                 <img class="p-1!" src="./icons/remove-book.png" width="40" height="40" />
               </button>
           </td>
-        </tr>
-      `;
-    })
-    .join("");
+        </tr>`;
+  });
 
-  const addBookRow = `
-        <tr>
-            <td colspan="6" class="p-0!">
-                <button
-                class="w-full flex items-center justify-center p-0! bg-black border-2 text-white font-bold tracking-widest uppercase cursor-pointer hover:bg-white hover:text-black transition-all"
-                popovertarget="add-book-dialog"
-                >
-                <img src="./icons/add-book.png" width="50" height="50" />
-                Add Book
-                </button>
-            </td>
-        </tr>
-    `;
+  tableBody.innerHTML = rows;
+  cardContainer.innerHTML = cards;
+};
 
-  tableBody.innerHTML = bookRows + addBookRow;
+const actionsHandler = (event) => {
+  const removeBookButton = event.target.closest(".remove-book");
+  const changeReadStatusButton = event.target.closest(".change-read-status");
+
+  if (!(removeBookButton || changeReadStatusButton)) return;
+
+  const id = removeBookButton
+    ? removeBookButton.dataset.id
+    : changeReadStatusButton.dataset.id;
+
+  const indexOfTheObject = library.findIndex((book) => book.id === id);
+
+  if (removeBookButton) {
+    library.splice(indexOfTheObject, 1);
+  } else if (changeReadStatusButton) {
+    library[indexOfTheObject].isRead = !library[indexOfTheObject].isRead;
+  }
+
+  localStorage.setItem("library", JSON.stringify(library));
+
+  displayBooks();
 };
 
 displayBooks();
@@ -114,24 +180,5 @@ addBookButton.addEventListener("click", (event) => {
   addBookDialog.hidePopover();
 });
 
-tableBody.addEventListener("click", (event) => {
-  const removeBookButton = event.target.closest(".remove-book");
-  const changeReadStatusButton = event.target.closest(".change-read-status");
-
-  if (!(removeBookButton || changeReadStatusButton)) return;
-
-  const id = removeBookButton
-    ? removeBookButton.dataset.id
-    : changeReadStatusButton.dataset.id;
-
-  const indexOfTheObject = library.findIndex((book) => book.id === id);
-
-  if (removeBookButton) {
-    library.splice(indexOfTheObject, 1);
-  } else if (changeReadStatusButton) {
-    library[indexOfTheObject].isRead = !library[indexOfTheObject].isRead;
-  }
-
-  localStorage.setItem("library", JSON.stringify(library));
-  displayBooks();
-});
+tableBody.addEventListener("click", actionsHandler);
+cardContainer.addEventListener("click", actionsHandler);
