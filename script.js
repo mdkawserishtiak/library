@@ -17,6 +17,8 @@ const selectCategory = document.querySelector("#category");
 const inputPages = document.querySelector("#pages");
 const inputIsRead = document.querySelector("#read");
 
+const selectView = document.querySelector("#view");
+
 function Book(id, title, author, category, pages, isRead) {
   if (!new.target) {
     throw Error("You must use the 'new' operator to call the constructor");
@@ -38,11 +40,11 @@ const addBookToLibrary = (title, author, category, pages, isRead) => {
   localStorage.setItem("library", JSON.stringify(library));
 };
 
-const displayBooks = () => {
+const addBooksToHTML = (books) => {
   let cards = "";
   let rows = "";
 
-  library.forEach((book) => {
+  books.forEach((book) => {
     cards += `<div class="mt-10 p-5 border border-gray-100 rounded shadow-xl">
         <h2 class="flex justify-between border-b-2 border-gray-300 pb-3">
           <span class="font-black uppercase">Title</span>
@@ -153,6 +155,21 @@ const displayBooks = () => {
   cardContainer.innerHTML = cards;
 };
 
+const viewBooks = () => {
+  if (selectView.value !== "All") {
+    const selectedBooks = library.filter(
+      (book) => selectView.value === book.category,
+    );
+
+    addBooksToHTML(selectedBooks);
+  } else {
+    addBooksToHTML(library);
+  }
+
+  selectCategory.value =
+    selectView.value === "All" ? "Uncategorized" : selectView.value;
+};
+
 const actionsHandler = (event) => {
   const removeBookButton = event.target.closest(".remove-book");
   const changeReadStatusButton = event.target.closest(".change-read-status");
@@ -172,12 +189,14 @@ const actionsHandler = (event) => {
     library.splice(indexOfTheObject, 1);
 
     localStorage.setItem("library", JSON.stringify(library));
-    displayBooks();
+
+    viewBooks();
   } else if (changeReadStatusButton) {
     library[indexOfTheObject].isRead = !library[indexOfTheObject].isRead;
 
     localStorage.setItem("library", JSON.stringify(library));
-    displayBooks();
+
+    viewBooks();
   } else if (editBookButton) {
     addBookButton.classList.remove("flex");
     addBookButton.classList.add("hidden");
@@ -206,14 +225,14 @@ const actionsHandler = (event) => {
 
       library[indexOfTheObject].title = inputTitle.value;
       library[indexOfTheObject].author = inputAuthor.value;
-      library[indexOfTheObject].category =
-        selectCategory.options[selectCategory.selectedIndex].text;
+      library[indexOfTheObject].category = selectCategory.value;
       library[indexOfTheObject].pages = inputPages.value;
       library[indexOfTheObject].isRead = inputIsRead.checked;
 
       inputTitle.value = "";
       inputAuthor.value = "";
-      selectCategory.value = "Uncategorized";
+      selectCategory.value =
+        selectView.value === "All" ? "Uncategorized" : selectView.value;
       inputPages.value = "";
       inputIsRead.checked = false;
 
@@ -226,12 +245,12 @@ const actionsHandler = (event) => {
       editBookButtonSpecial.classList.add("hidden");
 
       localStorage.setItem("library", JSON.stringify(library));
-      displayBooks();
+      viewBooks();
     };
   }
 };
 
-displayBooks();
+viewBooks();
 
 addBookButton.addEventListener("click", (event) => {
   event.preventDefault();
@@ -247,28 +266,38 @@ addBookButton.addEventListener("click", (event) => {
   addBookToLibrary(
     inputTitle.value,
     inputAuthor.value,
-    selectCategory.options[selectCategory.selectedIndex].text,
+    selectCategory.value,
     inputPages.value,
     inputIsRead.checked,
   );
 
   inputTitle.value = "";
   inputAuthor.value = "";
-  selectCategory.value = "Uncategorized";
+  selectCategory.value =
+    selectView.value === "All" ? "Uncategorized" : selectView.value;
   inputPages.value = "";
   inputIsRead.checked = false;
 
   bookDialog.hidePopover();
+  viewBooks();
+});
 
-  displayBooks();
+closeButton.addEventListener("click", () => {
+  inputTitle.value = "";
+  inputAuthor.value = "";
+  selectCategory.value =
+    selectView.value === "All" ? "Uncategorized" : selectView.value;
+  inputPages.value = "";
+  inputIsRead.checked = false;
+
+  addBookButton.classList.remove("hidden");
+  addBookButton.classList.add("flex");
+
+  editBookButtonSpecial.classList.remove("flex");
+  editBookButtonSpecial.classList.add("hidden");
 });
 
 tableBody.addEventListener("click", actionsHandler);
 cardContainer.addEventListener("click", actionsHandler);
-closeButton.addEventListener("click", () => {
-  inputTitle.value = "";
-  inputAuthor.value = "";
-  selectCategory.value = "Uncategorized";
-  inputPages.value = "";
-  inputIsRead.checked = false;
-});
+
+selectView.addEventListener("change", viewBooks);

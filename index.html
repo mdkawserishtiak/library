@@ -27,6 +27,25 @@
       Library
     </h1>
 
+    <div
+      class="flex justify-between mt-20 px-11 sm:justify-center sm:gap-4 sm:-mb-15"
+    >
+      <label class="font-black uppercase" for="view">View</label>
+
+      <select
+        class="px-2 outline-0 cursor-pointer text-right sm:text-left sm:border"
+        id="view"
+        name="view"
+      >
+        <option value="All" selected>All</option>
+        <option value="Uncategorized">Uncategorized</option>
+        <option value="Fiction">Fiction</option>
+        <option value="Non fiction">Non fiction</option>
+        <option value="Poetry">Poetry</option>
+        <option value="Drama">Drama</option>
+      </select>
+    </div>
+
     <div class="px-6 my-10 sm:hidden">
       <div id="card-container"></div>
 
@@ -98,7 +117,7 @@
           <label class="uppercase" for="category">Category</label>
 
           <select
-            class="w-full outline-0 border py-1 px-1 cursor-pointer"
+            class="w-full outline-0 border p-1 cursor-pointer"
             id="category"
             name="category"
           >
