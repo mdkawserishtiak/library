@@ -1,7 +1,9 @@
 # Library
 
-![Desktop](./desktop.png)
-![Mobile](./mobile.png)
+<p align="center">
+  <img src="./desktop.png" alt="Desktop" width="68%">
+  <img src="./mobile.png" alt="Mobile" width="25%">
+</p>
 
 A lightweight, responsive personal library tracker built with HTML, TailwindCSS, and JavaScript. Keep a record of the books you have, organize them by category, and update your reading status as you go. Your library is saved in your browser, so it remains available when you return.
 
