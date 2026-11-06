@@ -1,51 +1,109 @@
-const library = localStorage.getItem("library")
-  ? JSON.parse(localStorage.getItem("library"))
-  : [];
-
 const tableBody = document.querySelector("#table-body");
 const cardContainer = document.querySelector("#card-container");
 
-const bookDialog = document.querySelector("#book-dialog");
-
 const addBookButton = document.querySelector("#add-book-button");
-const editBookButtonSpecial = document.querySelector("#edit-book-button");
-const closeButton = document.querySelector("#close");
-
-const inputTitle = document.querySelector("#title");
-const inputAuthor = document.querySelector("#author");
-const selectCategory = document.querySelector("#category");
-const inputPages = document.querySelector("#pages");
-const inputIsRead = document.querySelector("#read");
-
 const selectView = document.querySelector("#view");
 
-function Book(id, title, author, category, pages, isRead) {
-  if (!new.target) {
-    throw Error("You must use the 'new' operator to call the constructor");
+const library = (function () {
+  const books = localStorage.getItem("library")
+    ? JSON.parse(localStorage.getItem("library"))
+    : [];
+
+  class Book {
+    constructor(title, author, category, pages, isRead) {
+      this.id = crypto.randomUUID();
+      this.title = title;
+      this.author = author;
+      this.category = category;
+      this.pages = pages;
+      this.isRead = isRead;
+    }
   }
 
-  this.id = id;
-  this.title = title;
-  this.author = author;
-  this.category = category;
-  this.pages = pages;
-  this.isRead = isRead;
-}
+  const getBook = (id) => {
+    return books.find((book) => id === book.id);
+  };
 
-const addBookToLibrary = (title, author, category, pages, isRead) => {
-  const id = crypto.randomUUID();
-  const book = new Book(id, title, author, category, pages, isRead);
+  const getAllBooks = () => {
+    return books;
+  };
 
-  library.push(book);
-  localStorage.setItem("library", JSON.stringify(library));
-};
+  const getBooksByCategory = (category) => {
+    return books.filter((book) => category === book.category);
+  };
 
-const addBooksToHTML = (books) => {
-  let cards = "";
-  let rows = "";
+  const getBookIndex = (id) => {
+    return books.findIndex((book) => id === book.id);
+  };
 
-  books.forEach((book) => {
-    cards += `<div class="mt-10 p-5 border border-gray-100 rounded shadow-xl">
+  const uploadBooks = () => {
+    localStorage.setItem("library", JSON.stringify(books));
+  };
+
+  const addBook = (title, author, category, pages, isRead) => {
+    const book = new Book(title, author, category, pages, isRead);
+
+    books.push(book);
+    uploadBooks();
+  };
+
+  const removeBook = (id) => {
+    books.splice(getBookIndex(id), 1);
+    uploadBooks();
+  };
+
+  const toggleBookReadStatus = (id) => {
+    const index = getBookIndex(id);
+
+    books[index].isRead = !books[index].isRead;
+    uploadBooks();
+  };
+
+  const updateBook = (id, title, author, category, pages, isRead) => {
+    const index = getBookIndex(id);
+
+    books[index].title = title;
+    books[index].author = author;
+    books[index].category = category;
+    books[index].pages = pages;
+    books[index].isRead = isRead;
+
+    uploadBooks();
+  };
+
+  return {
+    getBook,
+    getAllBooks,
+    getBooksByCategory,
+    addBook,
+    removeBook,
+    toggleBookReadStatus,
+    updateBook,
+  };
+})();
+
+const interface = (function () {
+  const bookDialog = document.querySelector("#book-dialog");
+
+  const editBookButtonSpecial = document.querySelector("#edit-book-button");
+
+  const inputTitle = document.querySelector("#title");
+  const inputAuthor = document.querySelector("#author");
+  const selectCategory = document.querySelector("#category");
+  const inputPages = document.querySelector("#pages");
+  const inputIsRead = document.querySelector("#read");
+
+  const renderBooks = () => {
+    const books =
+      selectView.value === "All"
+        ? library.getAllBooks()
+        : library.getBooksByCategory(selectView.value);
+
+    let cards = "";
+    let rows = "";
+
+    books.forEach((book) => {
+      cards += `<div class="mt-10 p-5 border border-gray-100 rounded shadow-xl">
         <h2 class="flex justify-between border-b-2 border-gray-300 pb-3">
           <span class="font-black uppercase">Title</span>
           <span>${book.title}</span>
@@ -71,7 +129,7 @@ const addBooksToHTML = (books) => {
           <span class="flex items-center gap-2">
             ${book.isRead ? "Yes" : "No"}
             <button
-              class="border-b-3 border-white cursor-pointer transition-all hover:border-black change-read-status"
+              class="border-b-3 border-white cursor-pointer transition-all hover:border-black toggle-read-status"
               data-id="${book.id}"
             >
               <img
@@ -113,7 +171,7 @@ const addBooksToHTML = (books) => {
         </div>
       </div>`;
 
-    rows += `<tr class="odd:bg-gray-200/70">
+      rows += `<tr class="odd:bg-gray-200/70">
           <td>${book.title}</td>
           <td>${book.author}</td>
           <td>${book.category ? book.category : "Uncategorized"}</td>
@@ -122,7 +180,7 @@ const addBooksToHTML = (books) => {
             <div class="p-0!">${book.isRead ? "Yes" : "No"}</div>
 
             <button
-                class="p-0! cursor-pointer transition-all hover:border-b-3 change-read-status"
+                class="p-0! cursor-pointer transition-all hover:border-b-3 toggle-read-status"
                 data-id="${book.id}"
                 >
                 <img class="p-1!" src="./icons/exchange.png" width="26" height="26" />
@@ -149,155 +207,150 @@ const addBooksToHTML = (books) => {
               </button>
           </td>
         </tr>`;
-  });
+    });
 
-  tableBody.innerHTML = rows;
-  cardContainer.innerHTML = cards;
-};
+    tableBody.innerHTML = rows;
+    cardContainer.innerHTML = cards;
 
-const viewBooks = () => {
-  if (selectView.value !== "All") {
-    const selectedBooks = library.filter(
-      (book) => selectView.value === book.category,
+    selectCategory.value =
+      selectView.value === "All" ? "Uncategorized" : selectView.value;
+  };
+
+  const resetInputs = () => {
+    inputTitle.value = "";
+    inputAuthor.value = "";
+    selectCategory.value =
+      selectView.value === "All" ? "Uncategorized" : selectView.value;
+    inputPages.value = "";
+    inputIsRead.checked = false;
+  };
+
+  const toggleButton = (button) => {
+    if (button.classList.contains("flex")) {
+      button.classList.remove("flex");
+      button.classList.add("hidden");
+    } else {
+      button.classList.add("flex");
+      button.classList.remove("hidden");
+    }
+  };
+
+  const swapButton = () => {
+    // MAIN
+    // addBookButton.classList.remove("hidden");
+    // addBookButton.classList.add("flex");
+    // editBookButtonSpecial.classList.remove("flex");
+    // editBookButtonSpecial.classList.add("hidden");
+    // END
+    // resetButton(addBookButton);
+    // resetButton(editBookButtonSpecial);
+
+    toggleButton(addBookButton);
+    toggleButton(editBookButtonSpecial);
+  };
+
+  const resetForm = () => {
+    resetInputs();
+
+    editBookButtonSpecial.classList.remove("flex");
+    editBookButtonSpecial.classList.add("hidden");
+
+    addBookButton.classList.add("flex");
+    addBookButton.classList.remove("hidden");
+  };
+
+  const handleAddBook = (event) => {
+    event.preventDefault();
+
+    if (
+      inputTitle.value === "" ||
+      inputAuthor.value === "" ||
+      inputPages.value === ""
+    ) {
+      return;
+    }
+
+    library.addBook(
+      inputTitle.value,
+      inputAuthor.value,
+      selectCategory.value,
+      inputPages.value,
+      inputIsRead.checked,
     );
 
-    addBooksToHTML(selectedBooks);
-  } else {
-    addBooksToHTML(library);
-  }
+    bookDialog.hidePopover();
 
-  selectCategory.value =
-    selectView.value === "All" ? "Uncategorized" : selectView.value;
-};
+    renderBooks();
+    resetInputs();
+  };
 
-const actionsHandler = (event) => {
-  const removeBookButton = event.target.closest(".remove-book");
-  const changeReadStatusButton = event.target.closest(".change-read-status");
-  const editBookButton = event.target.closest(".edit-book");
+  const handleActions = (event) => {
+    const toggleReadStatusButton = event.target.closest(".toggle-read-status");
+    const removeBookButton = event.target.closest(".remove-book");
+    const editBookButton = event.target.closest(".edit-book");
 
-  if (!(removeBookButton || changeReadStatusButton || editBookButton)) return;
+    if (!(toggleReadStatusButton || removeBookButton || editBookButton)) return;
 
-  const id = removeBookButton
-    ? removeBookButton.dataset.id
-    : changeReadStatusButton
-      ? changeReadStatusButton.dataset.id
-      : editBookButton.dataset.id;
+    const id = toggleReadStatusButton
+      ? toggleReadStatusButton.dataset.id
+      : removeBookButton
+        ? removeBookButton.dataset.id
+        : editBookButton.dataset.id;
 
-  const indexOfTheObject = library.findIndex((book) => book.id === id);
+    if (toggleReadStatusButton) {
+      library.toggleBookReadStatus(id);
+      renderBooks();
+    } else if (removeBookButton) {
+      library.removeBook(id);
+      renderBooks();
+    } else {
+      swapButton();
+      bookDialog.showPopover();
 
-  if (removeBookButton) {
-    library.splice(indexOfTheObject, 1);
+      const book = library.getBook(id);
 
-    localStorage.setItem("library", JSON.stringify(library));
+      inputTitle.value = book.title;
+      inputAuthor.value = book.author;
+      selectCategory.value = book.category;
+      inputPages.value = book.pages;
+      inputIsRead.checked = book.isRead;
 
-    viewBooks();
-  } else if (changeReadStatusButton) {
-    library[indexOfTheObject].isRead = !library[indexOfTheObject].isRead;
+      editBookButtonSpecial.onclick = (event) => {
+        event.preventDefault();
 
-    localStorage.setItem("library", JSON.stringify(library));
+        if (
+          inputTitle.value === "" ||
+          inputAuthor.value === "" ||
+          inputPages.value === ""
+        ) {
+          return;
+        }
 
-    viewBooks();
-  } else if (editBookButton) {
-    addBookButton.classList.remove("flex");
-    addBookButton.classList.add("hidden");
+        library.updateBook(
+          id,
+          inputTitle.value,
+          inputAuthor.value,
+          selectCategory.value,
+          inputPages.value,
+          inputIsRead.checked,
+        );
 
-    editBookButtonSpecial.classList.remove("hidden");
-    editBookButtonSpecial.classList.add("flex");
+        bookDialog.hidePopover();
+        renderBooks();
+        resetForm();
+      };
+    }
+  };
 
-    bookDialog.showPopover();
+  return { renderBooks, handleAddBook, resetForm, handleActions };
+})();
 
-    inputTitle.value = library[indexOfTheObject].title;
-    inputAuthor.value = library[indexOfTheObject].author;
-    selectCategory.value = library[indexOfTheObject].category;
-    inputPages.value = library[indexOfTheObject].pages;
-    inputIsRead.checked = library[indexOfTheObject].isRead;
+interface.renderBooks();
 
-    editBookButtonSpecial.onclick = (event) => {
-      event.preventDefault();
+addBookButton.addEventListener("click", interface.handleAddBook);
+document.querySelector("#close").addEventListener("click", interface.resetForm);
 
-      if (
-        inputTitle.value === "" ||
-        inputAuthor.value === "" ||
-        inputPages.value === ""
-      ) {
-        return;
-      }
+tableBody.addEventListener("click", interface.handleActions);
+cardContainer.addEventListener("click", interface.handleActions);
 
-      library[indexOfTheObject].title = inputTitle.value;
-      library[indexOfTheObject].author = inputAuthor.value;
-      library[indexOfTheObject].category = selectCategory.value;
-      library[indexOfTheObject].pages = inputPages.value;
-      library[indexOfTheObject].isRead = inputIsRead.checked;
-
-      inputTitle.value = "";
-      inputAuthor.value = "";
-      selectCategory.value =
-        selectView.value === "All" ? "Uncategorized" : selectView.value;
-      inputPages.value = "";
-      inputIsRead.checked = false;
-
-      bookDialog.hidePopover();
-
-      addBookButton.classList.remove("hidden");
-      addBookButton.classList.add("flex");
-
-      editBookButtonSpecial.classList.remove("flex");
-      editBookButtonSpecial.classList.add("hidden");
-
-      localStorage.setItem("library", JSON.stringify(library));
-      viewBooks();
-    };
-  }
-};
-
-viewBooks();
-
-addBookButton.addEventListener("click", (event) => {
-  event.preventDefault();
-
-  if (
-    inputTitle.value === "" ||
-    inputAuthor.value === "" ||
-    inputPages.value === ""
-  ) {
-    return;
-  }
-
-  addBookToLibrary(
-    inputTitle.value,
-    inputAuthor.value,
-    selectCategory.value,
-    inputPages.value,
-    inputIsRead.checked,
-  );
-
-  inputTitle.value = "";
-  inputAuthor.value = "";
-  selectCategory.value =
-    selectView.value === "All" ? "Uncategorized" : selectView.value;
-  inputPages.value = "";
-  inputIsRead.checked = false;
-
-  bookDialog.hidePopover();
-  viewBooks();
-});
-
-closeButton.addEventListener("click", () => {
-  inputTitle.value = "";
-  inputAuthor.value = "";
-  selectCategory.value =
-    selectView.value === "All" ? "Uncategorized" : selectView.value;
-  inputPages.value = "";
-  inputIsRead.checked = false;
-
-  addBookButton.classList.remove("hidden");
-  addBookButton.classList.add("flex");
-
-  editBookButtonSpecial.classList.remove("flex");
-  editBookButtonSpecial.classList.add("hidden");
-});
-
-tableBody.addEventListener("click", actionsHandler);
-cardContainer.addEventListener("click", actionsHandler);
-
-selectView.addEventListener("change", viewBooks);
+selectView.addEventListener("change", interface.renderBooks);
