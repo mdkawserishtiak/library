@@ -1,47 +1,36 @@
 # Library
 
-A lightweight personal library tracker built with plain HTML, TailwindCSS, and JavaScript. It lets you keep track of books you've read, books you're currently reading, and books you want to add to your collection.
+![Desktop](./desktop.png)
+![Mobile](./mobile.png)
+
+A lightweight, responsive personal library tracker built with HTML, TailwindCSS, and JavaScript. Keep a record of the books you have, organize them by category, and update your reading status as you go. Your library is saved in your browser, so it remains available when you return.
 
 ## Features
 
-- Add new books with title, author, pages, and read status
+- Add books with a title, author, category, page count, and read status
+- Edit book details after adding them
 - Mark books as read or unread
-- Remove books from the library
-- Persistent data storage using `localStorage`
-- Responsive, simple UI for easy tracking
+- Remove books from your library
+- Filter the library by category or view all books
+- Automatically save your library in browser `localStorage`
+- Use a card layout on small screens and a table layout on larger screens
+
+## Categories
+
+Books can be organized as Uncategorized, Fiction, Non fiction, Poetry, or Drama.
 
 ## Tech Stack
 
 - HTML
-- TailwindCSS
+- Tailwind CSS
 - JavaScript
+- Browser `localStorage` for persistence
 
-## Project Structure
+## How to Use
 
-```text
-library/
-├── index.html
-├── script.js
-├── styles.css
-├── .gitignore
-├── README.md
-└── icons/
-```
+- Add a book by entering its title, author, and page count, then choose a category and reading status.
+- Use the **View** selector to show all books or filter by category.
+- Use the read-status control to switch a book between read and unread.
+- Choose the edit or remove action to update or delete a book.
 
-## How It Works
-
-- The app stores all library entries in `localStorage`.
-- Each book includes:
-  - id
-  - title
-  - author
-  - pages
-  - read status
-- The page dynamically renders the current list and handles add/remove actions in the browser.
-
-## Example Usage
-
-1. Click the "Add Book" button.
-2. Enter the book's title, author, total pages, and whether it has been read.
-3. Save it to your library.
-4. Toggle the read status or remove any book whenever needed.
+Your book data is stored locally in the browser. It is not synced between browsers or devices.
